@@ -1,0 +1,18 @@
+﻿using Microsoft.AspNetCore.SignalR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Consulta_medica.Dto.Request
+{
+    public class PacienteRequestDto
+    {
+        public int? Dnip { get; set; }
+        public string Idtip { get; set; }
+        public string Nomp { get; set; }
+        public int Numero { get; set; }
+        public int? edad { get; set; }
+        public string correoElectronico { get; set; }
+    }
+}

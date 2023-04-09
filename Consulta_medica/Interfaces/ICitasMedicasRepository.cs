@@ -15,6 +15,5 @@ namespace Consulta_medica.Interfaces
         Task<Response> AddCitas(CitasRequestDto request);
         Task<CitasRequestDto> UpdateCitas(CitasRequestDto request);
         Task<Citas> DeleteCitas(int id);
-        object GenerarPdf(List<CitasQueryDtoReport> request);
     }
 }

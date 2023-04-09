@@ -102,41 +102,6 @@ namespace Consulta_medica.Controllers
             return Ok(orespuesta);
         }
 
-        [HttpPost("Excel")]
-        public IActionResult Excel_File(List<PacienteRequestDto> request)
-        {
-            Response orespuesta = new Response();
-
-            SLDocument osqlDocument = new SLDocument();
-
-            System.Data.DataTable dt = new System.Data.DataTable();
-
-            //columnas
-            dt.Columns.Add("Nombre", typeof(string));
-            dt.Columns.Add("DNI", typeof(string));
-            dt.Columns.Add("Numero", typeof(string));
-
-            //registros
-
-            foreach (var item in request)
-            {
-                dt.Rows.Add(item.Dnip, item.Nomp, item.Numero);
-            }
-
-            osqlDocument.ImportDataTable(1, 1, dt, true);
-
-            string pathFile = "C:\\Users\\Usuario\\Downloads\\pacientes.xlsx";
-
-
-            osqlDocument.SaveAs(pathFile);
-
-            orespuesta.exito = 1;
-            orespuesta.mensaje = "Excel Exportado con exito";
-
-            return Ok(orespuesta);
-
-        }
-
         [HttpPost("Filters")]
         public async Task<IActionResult> Filters(RequestFilterDto request) 
         {

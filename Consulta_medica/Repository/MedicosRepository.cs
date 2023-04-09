@@ -89,7 +89,7 @@ namespace Consulta_medica.Repository
             {
                 //Dni del medico
                 case "0":
-                    var Filter = await _context.Medico.Where(x => x.Dni == Int32.Parse(request.texto)).ToListAsync();
+                    var Filter = await _context.Medico.Where(x => x.Dni.ToString().Contains(request.texto)).ToListAsync();
                     if (Filter.Count() > 0)
                     {
                         orespuesta.exito = 1;
@@ -106,7 +106,7 @@ namespace Consulta_medica.Repository
                     break;
                 //Nombre del medico
                 case "1":
-                    var FilterTwo = await _context.Medico.Where(x => x.Nombre == request.texto).ToListAsync();
+                    var FilterTwo = await _context.Medico.Where(x => x.Nombre.Contains(request.texto)).ToListAsync();
                     if (FilterTwo.Count() > 0)
                     {
                         orespuesta.exito = 1;
@@ -122,7 +122,7 @@ namespace Consulta_medica.Repository
                     break;
                 //Codigo del medico
                 case "2":
-                    var FilterThree = await _context.Medico.Where(x => x.Codmed == request.texto).ToListAsync();
+                    var FilterThree = await _context.Medico.Where(x => x.Codmed.Contains(request.texto)).ToListAsync();
                     if (FilterThree.Count() > 0)
                     {
                         orespuesta.exito = 1;

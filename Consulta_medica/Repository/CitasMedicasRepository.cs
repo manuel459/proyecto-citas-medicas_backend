@@ -33,11 +33,11 @@ namespace Consulta_medica.Repository
 
             var permisosGenericos = await permisosRepository.validateGenericPermission(correoElectronico);
 
-            var exist = permisosGenericos.Contains("LIST-MODULE-NEWCITA");
+            var exist = permisosGenericos.Contains("LIST-MODULE-NEWCITA") || permisosGenericos.Contains("LIST-MODULE-NEWCITA-PACIENTES");
 
             return (exist) ? true : false;
         }
-        public async Task<IEnumerable<CitasQueryDto>> GetCitas(RequestGenericFilter request)
+        public async Task<IEnumerable<CitasQueryDto>> GetCitas(RequestGenericFilter request, string usuario)
         {
 
             var ParamNombreMedico = new SqlParameter("@sNombreMedico", DBNull.Value);
@@ -45,6 +45,8 @@ namespace Consulta_medica.Repository
             var ParamNombrePaciente = new SqlParameter("@sNombrePaciente", DBNull.Value);
 
             var ParamNombreEspecialidad = new SqlParameter("@sNombre_Especialidad", DBNull.Value);
+
+            var ParamUsuario = new SqlParameter("@sUsuario", usuario!=null?usuario:DBNull.Value);
 
             if (request.numFilter != null && request.textFilter != null)
             {
@@ -67,8 +69,8 @@ namespace Consulta_medica.Repository
             var slgp = filterGeneric(request);
 
             var queryReponse = await _context.Set<CitasQueryDto>()
-                .FromSqlRaw("EXECUTE sp_listado_citas @sNombreMedico, @sNombrePaciente, @sNombre_Especialidad, @sFilterOne, @sFilterTwo, @dFechaInicio, @dFechaFin",
-                parameters: new[] { ParamNombreMedico, ParamNombrePaciente, ParamNombreEspecialidad, slgp.pFilterOne, slgp.pFilterTwo,ParamFechaIni, ParamFechaFin }).ToListAsync();
+                .FromSqlRaw("EXECUTE sp_listado_citas @sNombreMedico, @sNombrePaciente, @sNombre_Especialidad, @sFilterOne, @sFilterTwo, @dFechaInicio, @dFechaFin, @sUsuario",
+                parameters: new[] { ParamNombreMedico, ParamNombrePaciente, ParamNombreEspecialidad, slgp.pFilterOne, slgp.pFilterTwo,ParamFechaIni, ParamFechaFin, ParamUsuario }).ToListAsync();
 
             return queryReponse;
         }

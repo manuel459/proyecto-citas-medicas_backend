@@ -10,7 +10,7 @@ namespace Consulta_medica.Interfaces
 {
     public interface ICitasMedicasRepository
     {
-        Task<IEnumerable<CitasQueryDto>> GetCitas(RequestGenericFilter request);
+        Task<IEnumerable<CitasQueryDto>> GetCitas(RequestGenericFilter request, string usuario);
         Task<bool> ValidatePermission(string correoElectronico);
         Task<Response> AddCitas(CitasRequestDto request);
         Task<CitasRequestDto> UpdateCitas(CitasRequestDto request);

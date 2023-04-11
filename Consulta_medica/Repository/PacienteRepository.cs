@@ -31,7 +31,7 @@ namespace Consulta_medica.Repository
                                  join c in _context.Citas
                                  on p.Dnip equals c.Dnip
                                  where c.Codmed == _context.Medico.Where(x => x.Correo == correoElectronico).Select(x => x.Codmed).FirstOrDefault()
-                                 select p).OrderByDescending(x => x.Dnip).ToListAsync();
+                                 select p).OrderByDescending(x => x.Dnip).Distinct().ToListAsync();
                 return lst;
             }
             else 

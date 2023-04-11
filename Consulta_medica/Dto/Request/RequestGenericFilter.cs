@@ -8,5 +8,6 @@
         public string sFilterTwo { get; set; } = null;
         public string dFechaInicio { get; set; } = null;
         public string dFechaFin { get; set; } = null;
+        public string sCorreo { get; set; } = null;
     }
 }

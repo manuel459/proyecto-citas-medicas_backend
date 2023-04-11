@@ -38,10 +38,11 @@ namespace Consulta_medica.Controllers
             Response orespuesta = new Response();
             try
             {
+
                 var permission = await _citas.ValidatePermission(usuario);
                 if (permission)
                 {
-                    var lst = await _citas.GetCitas(request);
+                    var lst = await _citas.GetCitas(request, usuario);
                     orespuesta.exito = 1;
                     orespuesta.mensaje = "citas traida con exito";
                     orespuesta.data = lst;

@@ -10,10 +10,9 @@ namespace Consulta_medica.Interfaces
 {
     public interface IPacienteRepository
     {
-        Task<IEnumerable<Paciente>> GetPacientes(string correoElectronico);
+        Task<IEnumerable<Paciente>> GetPacientes(RequestGenericFilter request, string correoElectronico);
         Task<Paciente> AddPaciente(PacienteRequestDto request);
         Task<PacienteRequestDto> UpdatePaciente(PacienteRequestDto request);
         Task<Paciente> DeletePaciente(int id);
-        Task<Response> Filters(RequestFilterDto request);
     }
 }

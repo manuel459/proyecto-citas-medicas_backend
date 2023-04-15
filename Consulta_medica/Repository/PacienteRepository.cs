@@ -2,6 +2,7 @@
 using Consulta_medica.Dto.Response;
 using Consulta_medica.Interfaces;
 using Consulta_medica.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,30 +18,51 @@ namespace Consulta_medica.Repository
         {
             _context = context;
         }
-        public async Task<IEnumerable<Paciente>> GetPacientes(string correoElectronico)
+
+        public async Task<IEnumerable<Paciente>> GetPacientes(RequestGenericFilter request, string usuario)
         {
-            PermisosRepository permisos = new PermisosRepository(_context);
 
-            var permisosGenerales = await permisos.validateGenericPermission(correoElectronico);
+            var ParamDniPaciente = new SqlParameter("@sDni", DBNull.Value);
 
-            var exist = permisosGenerales.Contains("LIST-MODULE-PACIENTES-INDIVIDUAL");
+            var ParamNombrePaciente = new SqlParameter("@sNombrePaciente", DBNull.Value);
 
-            if (exist)
+            var ParamNumeroPaciente = new SqlParameter("@sNumero", DBNull.Value);
+
+            var ParamUsuario = new SqlParameter("@sUsuario", usuario != null ? usuario : DBNull.Value);
+
+            if (request.numFilter != null && request.textFilter != null)
             {
-                var lst = await (from p in _context.Paciente
-                                 join c in _context.Citas
-                                 on p.Dnip equals c.Dnip
-                                 where c.Codmed == _context.Medico.Where(x => x.Correo == correoElectronico).Select(x => x.Codmed).FirstOrDefault()
-                                 select p).OrderByDescending(x => x.Dnip).Distinct().ToListAsync();
-                return lst;
+                switch (request.numFilter)
+                {
+                    case 0:
+                        ParamDniPaciente.Value = request.textFilter;
+                        break;
+                    case 1:
+                        ParamNombrePaciente.Value = request.textFilter;
+                        break;
+                    case 2:
+                        ParamNumeroPaciente.Value = request.textFilter;
+                        break;
+                }
             }
-            else 
-            {
-                var lst = await _context.Paciente.OrderByDescending(x => x.Dnip).ToListAsync();
-                return lst;
-            }
-            
-           
+            var ParamFechaIni = new SqlParameter("@dFechaInicio", request.dFechaInicio != null ? request.dFechaInicio : DBNull.Value);
+            var ParamFechaFin = new SqlParameter("@dFechaFin", request.dFechaFin != null ? request.dFechaFin : DBNull.Value);
+
+            var slgp = filterGeneric(request);
+
+            var queryReponse = await _context.Set<Paciente>()
+                .FromSqlRaw("EXECUTE sp_listado_pacientes @sDni, @sNombrePaciente, @sNumero, @sFilterOne, @sFilterTwo, @dFechaInicio, @dFechaFin, @sUsuario",
+                parameters: new[] { ParamDniPaciente, ParamNombrePaciente, ParamNumeroPaciente, slgp.pFilterOne, slgp.pFilterTwo, ParamFechaIni, ParamFechaFin, ParamUsuario }).ToListAsync();
+
+            return queryReponse;
+        }
+
+        public SqlGenericParameters filterGeneric(RequestGenericFilter request)
+        {
+            SqlGenericParameters generic = new();
+            generic.pFilterOne = new SqlParameter("@sFilterOne", request.sFilterOne != null ? request.sFilterOne : DBNull.Value);
+            generic.pFilterTwo = new SqlParameter("@sFilterTwo", request.sFilterTwo != null ? request.sFilterTwo : DBNull.Value);
+            return generic;
         }
 
         public async Task<Paciente> AddPaciente(PacienteRequestDto request)
@@ -79,64 +101,6 @@ namespace Consulta_medica.Repository
             _context.Paciente.Remove(lst);
             await _context.SaveChangesAsync();
             return lst;
-        }
-
-        public async Task<Response> Filters(RequestFilterDto request)
-        {
-            Response orespuesta = new Response();
-            switch (request.status)
-            {
-                //Dni del Paciente
-                case "0":
-                    var Filter = await _context.Paciente.Where(x => x.Dnip == Int32.Parse(request.texto)).ToListAsync();
-                    if (Filter.Count() > 0)
-                    {
-                        orespuesta.exito = 1;
-                        orespuesta.mensaje = "Filtro exitoso";
-                        orespuesta.data = Filter;
-                    }
-                    else
-                    {
-                        orespuesta.exito = 0;
-                        orespuesta.mensaje = "No existe";
-                        orespuesta.data = Filter;
-                    }
-
-                    break;
-                //Nombre del paciente
-                case "1":
-                    var FilterTwo = await _context.Paciente.Where(x => x.Nomp.Contains(request.texto)).ToListAsync();
-                    if (FilterTwo.Count() > 0)
-                    {
-                        orespuesta.exito = 1;
-                        orespuesta.mensaje = "Filtro exitoso";
-                        orespuesta.data = FilterTwo;
-                    }
-                    else
-                    {
-                        orespuesta.exito = 0;
-                        orespuesta.mensaje = "No existe";
-                        orespuesta.data = FilterTwo;
-                    }
-                    break;
-                //Numero del Paciente
-                case "2":
-                    var FilterThree = await _context.Paciente.Where(x => x.Numero == Int32.Parse(request.texto)).ToListAsync();
-                    if (FilterThree.Count() > 0)
-                    {
-                        orespuesta.exito = 1;
-                        orespuesta.mensaje = "Filtro exitoso";
-                        orespuesta.data = FilterThree;
-                    }
-                    else
-                    {
-                        orespuesta.exito = 0;
-                        orespuesta.mensaje = "No existe";
-                        orespuesta.data = FilterThree;
-                    }
-                    break;
-            }
-            return orespuesta;
         }
     }
 }

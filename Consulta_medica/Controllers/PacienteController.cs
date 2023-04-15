@@ -20,7 +20,7 @@ namespace Consulta_medica.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class PacienteController : ControllerBase
     {
         private readonly consulta_medicaContext _context;
@@ -34,12 +34,12 @@ namespace Consulta_medica.Controllers
         }
 
         [HttpGet("{usuario}")]
-        public async Task<IActionResult> GetPacientes(string usuario)
+        public async Task<IActionResult> GetPacientes([FromRoute] string usuario, [FromQuery] RequestGenericFilter request)
         {
             Response orespuesta = new Response();
             try
             { 
-                var lst = await _pacientes.GetPacientes(usuario);
+                var lst = await _pacientes.GetPacientes(request, usuario);
                 orespuesta.exito = 1;
                 orespuesta.mensaje = "Paciente traido con exito";
                 orespuesta.data = lst;
@@ -102,11 +102,5 @@ namespace Consulta_medica.Controllers
             return Ok(orespuesta);
         }
 
-        [HttpPost("Filters")]
-        public async Task<IActionResult> Filters(RequestFilterDto request) 
-        {
-            var lst = await _pacientes.Filters(request);
-            return Ok(lst);
-        }
     }
 }

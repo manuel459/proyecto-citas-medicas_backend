@@ -9,6 +9,7 @@ namespace Consulta_medica.Dto.Request
         public string Codes { get; set; }
         public string Idtip { get; set; }
         public string Nombre { get; set; }
+        public string sApellidos { get; set; }
         public string Sexo { get; set; }
         public DateTime? Nac { get; set; }
         public string Correo { get; set; }

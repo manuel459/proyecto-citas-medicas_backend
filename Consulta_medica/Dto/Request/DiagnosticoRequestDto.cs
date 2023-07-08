@@ -12,11 +12,10 @@ namespace Consulta_medica.Dto.Request
 
     public class DiagnosticoRequestPdfDto
     {
-        public int id { get; set; }
         public int idCita { get; set; }
-        public string nombre { get; set; }
-        public string especialidad { get; set; }
-        public string nomp { get; set; }
+        public int DniPaciente { get; set; }
+        public string Codes { get; set; }
+        public string Codmed { get; set; }
         public DateTime fecct { get; set; }
         public string diagnostico { get; set; }
         public string medicamentos { get; set; }

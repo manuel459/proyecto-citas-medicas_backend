@@ -17,6 +17,9 @@ using Consulta_medica.Common;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Consulta_medica.RealTemp;
+using Hangfire;
+using Consulta_medica.Extensions.Hangfire;
+using Consulta_medica.Extensions;
 
 namespace Consulta_medica
 {
@@ -49,6 +52,7 @@ namespace Consulta_medica
             });
 
             //Agregar serivico signalR
+            services.ConfigureHangFire(Configuration);
             services.AddSignalR().AddMessagePackProtocol();
 
             //Configuracion del servicio para definir la inyeccion
@@ -95,9 +99,18 @@ namespace Consulta_medica
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider)
         {
- 
+
+            //Dashboard view progress job
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                DashboardTitle = "Sample Jobs",
+                Authorization = new[]
+                {
+                    new  HangfireAuthorizationFilter("admin")
+                }
+            });
 
             if (env.IsDevelopment())
             {
@@ -114,6 +127,9 @@ namespace Consulta_medica
 
             app.UseAuthorization();
 
+            //Extensión para ejecutar jobs
+            serviceProvider.HangfireExecuteJob(recurringJobManager);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -121,7 +137,7 @@ namespace Consulta_medica
 
             });
 
-    
+            
 
 
             //app.UseEndpoints(endpoints =>

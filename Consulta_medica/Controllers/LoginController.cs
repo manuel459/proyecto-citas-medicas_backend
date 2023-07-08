@@ -25,7 +25,7 @@ namespace Consulta_medica.Controllers
         {
             Response respuesta = new Response();
             var userresponse = _userService.Auth(model);
-            if (userresponse == null)
+            if (userresponse.Token == null)
             {
                 respuesta.exito = 0;
                 respuesta.mensaje = "Usuario o contraseña incorrecta";

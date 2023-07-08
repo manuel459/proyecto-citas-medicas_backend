@@ -24,11 +24,15 @@ namespace Consulta_medica.Repository
         public UserResponseDto Auth(LogeoRequestDto model)
         {
             UserResponseDto userResponse = new UserResponseDto();
+
             using (var db = new consulta_medicaContext())
             {
                 string contraseña = model.Contraseña;
 
                 var usuario = db.Medico.Where(d => d.Correo == model.CorreoElectronico && d.Pswd == contraseña).FirstOrDefault();
+                var administrador = db.Administrador.Where(d => d.Correo == model.CorreoElectronico && d.Pswd == contraseña).FirstOrDefault();
+                var recepcion = db.Recepcions.Where(d => d.Correo == model.CorreoElectronico && d.Pswd == contraseña).FirstOrDefault();
+
                 if (usuario != null)
                 {
                     userResponse.CorreoElectronico = usuario.Correo;
@@ -36,14 +40,19 @@ namespace Consulta_medica.Repository
                     var inforUser = db.Medico.FirstOrDefault(x => x.Correo == userResponse.CorreoElectronico);
                     userResponse.Nombre = inforUser.Nombre;
                 }
-                else
+                else if (administrador != null)
                 {
-                    var administrador = db.Administrador.Where(d => d.Correo == model.CorreoElectronico && d.Pswd == contraseña).FirstOrDefault();
-                    if (administrador == null) return null;
                     userResponse.CorreoElectronico = administrador.Correo;
-                    userResponse.Token = GetToken<Administrador>(administrador.Codad,administrador.Correo);
+                    userResponse.Token = GetToken<Administrador>(administrador.Codad, administrador.Correo);
                     var inforUser = db.Administrador.FirstOrDefault(x => x.Correo == userResponse.CorreoElectronico);
                     userResponse.Nombre = inforUser.Nombre;
+                }
+                else if(recepcion != null)
+                {
+                    userResponse.CorreoElectronico = recepcion.Correo;
+                    userResponse.Token = GetToken<Recepcion>(recepcion.codre.ToString(), recepcion.Correo);
+                    var inforUser = db.Recepcions.FirstOrDefault(x => x.Correo == userResponse.CorreoElectronico);
+                    userResponse.Nombre = inforUser.Nombres + " "+ inforUser.Apellidos;
                 }
                   
             }

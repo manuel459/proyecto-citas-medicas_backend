@@ -28,9 +28,60 @@ namespace Consulta_medica.Controllers
                 {
                     orespuesta.mensaje = "No se encontraron registros";
                     orespuesta.exito = 0;
+                    orespuesta.data = configuraciones;
                     return Ok(orespuesta);
                 }
                 orespuesta.data = configuraciones;
+                orespuesta.mensaje = "consulta exitosa";
+                orespuesta.exito = 1;
+            }
+            catch (Exception ex)
+            {
+                orespuesta.mensaje = ex.Message;
+            }
+            return Ok(orespuesta);
+        }
+
+        [HttpGet("Grafica_Citas")]
+        public async Task<IActionResult> getGraficaCitas() 
+        {
+            Response orespuesta = new();
+            try
+            {
+                var grafica = await _configuraciones.getGraficaCitas();
+                if (grafica.Count().Equals(0))
+                {
+                    orespuesta.mensaje = "No se encontraron registros";
+                    orespuesta.exito = 0;
+                    orespuesta.data = grafica;
+                    return Ok(orespuesta);
+                }
+                orespuesta.data = grafica;
+                orespuesta.mensaje = "consulta exitosa";
+                orespuesta.exito = 1;
+            }
+            catch (Exception ex)
+            {
+                orespuesta.mensaje = ex.Message;
+            }
+            return Ok(orespuesta);
+        }
+
+        [HttpGet("Grafica_Citas_Disponibles")]
+        public async Task<IActionResult> getGraficaCitasDisponibles([FromQuery] string codmed, [FromQuery] string dFecha_Consulta)
+        {
+            Response orespuesta = new();
+            try
+            {
+                var grafica = await _configuraciones.getGraficaCitasDisponibles(codmed, dFecha_Consulta);
+                if (grafica == null)
+                {
+                    orespuesta.mensaje = "No se encontraron registros";
+                    orespuesta.exito = 0;
+                    orespuesta.data = grafica;
+                    return Ok(orespuesta);
+                }
+                orespuesta.data = grafica;
                 orespuesta.mensaje = "consulta exitosa";
                 orespuesta.exito = 1;
             }

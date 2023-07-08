@@ -59,13 +59,13 @@ namespace Consulta_medica.Controllers
             try
             {
                 // await _hubContext.Clients.All.SendAsync("Inserto paciente", request);
-                var detail = await _context.Paciente.FirstOrDefaultAsync(x => x.Dnip == request.Dnip);
-                if (detail is not null)
-                {
-                    orespuesta.exito = 0;
-                    orespuesta.mensaje = "Este paciente ya existe en la base de datos";
-                    return Ok(orespuesta);
-                }
+                //var detail = await _context.Paciente.FirstOrDefaultAsync(x => x.Dnip == request.Dnip);
+                //if (detail is not null)
+                //{
+                //    orespuesta.exito = 0;
+                //    orespuesta.mensaje = "Este paciente ya existe en la base de datos";
+                //    return Ok(orespuesta);
+                //}
 
                 var lst = await _pacientes.AddPaciente(request);
                 orespuesta.exito = 1;

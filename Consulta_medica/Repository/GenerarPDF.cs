@@ -1,13 +1,8 @@
 ﻿using Consulta_medica.Dto.Request;
 using iTextSharp.text.pdf;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net.Mail;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Consulta_medica.Repository
 {
@@ -42,6 +37,7 @@ namespace Consulta_medica.Repository
                 var stamper = new PdfStamper(pdfReader, newFileStream);
 
                 AcroFields fields = stamper.AcroFields;
+                fields.SetField("CodCita", contractInfo.Id.ToString());
                 fields.SetField("NombrePaciente", contractInfo.NombrePaciente);
                 fields.SetField("Dnip", contractInfo.Dnip.ToString());
                 fields.SetField("Nombre", contractInfo.NombreMedico);
@@ -67,7 +63,33 @@ namespace Consulta_medica.Repository
 
             string contraseña = "oivengxhqmwvfzle";
 
-            MailMessage mailMessage = new MailMessage(EmailOrigen, request.CorreoElectronico, "CITA MEDICA", "<b>Buen dia estimado(a) " + request.NombrePaciente + " adjunto su cita medica<b>");
+            MailMessage mailMessage = new MailMessage(EmailOrigen, request.CorreoElectronico, "CITA MÉDICA", "<b>Buen día estimado(a) " + request.NombrePaciente + " adjunto su cita médica<b>");
+
+            mailMessage.Attachments.Add(new Attachment(newDocumentFileName));
+
+            mailMessage.IsBodyHtml = true;
+
+
+            SmtpClient client = new SmtpClient("smtp.gmail.com");
+            client.EnableSsl = true;
+            client.UseDefaultCredentials = false;
+            client.Port = 587;
+            client.Credentials = new System.Net.NetworkCredential(EmailOrigen, contraseña);
+            client.Send(mailMessage);
+
+            client.Dispose();
+
+        }
+
+
+
+        public void EnvioNotificationRecordatorio(CitasRequestDto request, string newDocumentFileName)
+        {
+            string EmailOrigen = "manuel.chirre.sepulveda@gmail.com";
+
+            string contraseña = "oivengxhqmwvfzle";
+
+            MailMessage mailMessage = new MailMessage(EmailOrigen, request.CorreoElectronico, "CITA MÉDICA", $"<b>Buen dia estimado(a) {request.NombrePaciente} , recordatorio que su cita médica es el {request.Feccit.ToString("dd/MM/yyyy")} a  las {request.Hora}<b>");
 
             mailMessage.Attachments.Add(new Attachment(newDocumentFileName));
 

@@ -20,21 +20,23 @@ namespace Consulta_medica.Validation
 
             RuleFor(x => x.Dnip).Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("El campo DNI del paciente es requerido.")
-                .Must(x => x <= 99999999 && x >= 10000000).WithMessage("El campo DNI debe contener 8 caracteres de tipo númerico.");
+                .Must(x => x <= 99999999 && x >= 10000000).WithMessage("El campo DNI debe contener 8 caracteres de tipo númerico.")
+                            .Must((Paciente,dni) =>
+                            {
+                                using (consulta_medicaContext db = new consulta_medicaContext())
+                                {
+                                    var lista = db.Paciente.Where(x => x.Dnip == dni && x.Id != Paciente.Id).Select(x => x.Dnip);
+                                    return (!lista.Contains(dni));
+                                }
+                            }).WithMessage("Este paciente ya existe en la base de datos"); 
+
             RuleFor(customer => customer.correoElectronico).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                     .WithMessage("Email es requerido.")
                 .EmailAddress()
                     .WithMessage("Por favor ingresa un email valido.");
-            /*
-            .Must(id =>
-            {
-                using (consulta_medicaContext db = new consulta_medicaContext())
-                {
-                    var lista = db.Paciente.Where(x => x.Dnip == id).Select(x => x.Dnip);
-                    return (!lista.Contains(id)); 
-                }
-            }).WithMessage("Dni existente");*/
+            
+
 
             RuleFor(x => x.Numero).Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("El campo Número de Teléfono es requerido.")

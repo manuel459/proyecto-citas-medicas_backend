@@ -20,7 +20,7 @@ namespace Consulta_medica.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class CitasMedicasController : ControllerBase
     {
         private readonly ICitasMedicasRepository _citas;
@@ -248,6 +248,46 @@ namespace Consulta_medica.Controllers
             catch (Exception ex)
             {
                 orespuesta.mensaje = ex.Message; 
+            }
+
+            return Ok(orespuesta);
+        }
+
+        [HttpGet("HistoricMedik/{dnip}")]
+        public async Task<IActionResult> obtenerHistoriaMedica([FromRoute] int dnip)
+        {
+            Response orespuesta = new Response();
+            try
+            {
+                var obtenerCita = await (from h in _context.HistorialMedico
+                                         join e in _context.Especialidad
+                                         on h.Codes equals e.Codes
+                                         join m in _context.Medico
+                                         on h.Codmed equals m.Codmed
+                                         join p in _context.Paciente
+                                         on h.Dnip equals p.Dnip
+                                         where h.Dnip == dnip
+                                         orderby h.Fecct descending
+                                         select new 
+                                                 {
+                                                    h.idCita,
+                                                    sNombre_Especialidad = e.Nombre,
+                                                    sNombre_Medico = m.Nombre,
+                                                    h.Dnip,
+                                                    p.Nomp,
+                                                    h.Fecct,
+                                                    h.Diagnostico,
+                                                    h.Receta
+                                                 }).ToListAsync();// await _context.HistorialMedico.Where(x => x.Dnip == dnip).ToListAsync();
+
+                orespuesta.exito = 1;
+                orespuesta.mensaje = "Consulta exitosa";
+                orespuesta.data = obtenerCita;
+
+            }
+            catch (Exception ex)
+            {
+                orespuesta.mensaje = ex.Message;
             }
 
             return Ok(orespuesta);

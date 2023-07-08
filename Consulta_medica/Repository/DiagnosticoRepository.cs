@@ -58,20 +58,12 @@ namespace Consulta_medica.Repository
                 item.Estado = 2;
                 await _context.SaveChangesAsync();
             }
-            
-            var Codes = await (from e in _context.Especialidad
-                        where e.Nombre == request.especialidad
-                        select e.Codes).FirstOrDefaultAsync();
-
-            var idMedico = await (from m in _context.Medico
-                            where m.Nombre == request.nombre
-                            select m.Codmed).FirstOrDefaultAsync();
 
             HistorialMedico ohistoria = new HistorialMedico();
             ohistoria.idCita = request.idCita;
-            ohistoria.Dnip = request.id;
-            ohistoria.Codmed = idMedico;
-            ohistoria.Codes = Codes;
+            ohistoria.Dnip = request.DniPaciente;
+            ohistoria.Codmed = request.Codmed;
+            ohistoria.Codes = request.Codes;
             ohistoria.Fecct = request.fecct;
             ohistoria.Diagnostico = request.diagnostico;
             ohistoria.Receta = request.medicamentos;

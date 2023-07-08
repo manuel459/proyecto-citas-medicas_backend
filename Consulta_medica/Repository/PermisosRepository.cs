@@ -29,12 +29,24 @@ namespace Consulta_medica.Repository
                                   where a.Correo == correoElectronico
                                   select p.sSlug).ToListAsync();
 
-            if (permisosMedicos.Count().Equals(0))
-            {
-              return permisosAdm;
-            } 
+            var permisosRep = await (from a in _context.Recepcions
+                                     join p in _context.Permisos
+                                     on a.Iptip equals p.idtip
+                                     where a.Correo == correoElectronico
+                                     select p.sSlug).ToListAsync();
 
-            return permisosMedicos;
+            if (permisosMedicos.Count() > 0)
+            {
+                return permisosMedicos;
+            }
+            else if (permisosAdm.Count() > 0)
+            {
+                return permisosAdm;
+            }
+            else 
+            {
+                return permisosRep;
+            }
         }
     }
 }

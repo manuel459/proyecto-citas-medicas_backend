@@ -67,16 +67,26 @@ namespace Consulta_medica.Repository
 
         public async Task<Paciente> AddPaciente(PacienteRequestDto request)
         {
-            Paciente opaciente = new Paciente();
-            opaciente.Dnip = request.Dnip;
-            opaciente.Idtip = "U003";
-            opaciente.Nomp = request.Nomp;
-            opaciente.Numero = request.Numero;
-            opaciente.Edad = request.edad;
-            opaciente.correoElectronico = request.correoElectronico;
-            _context.Paciente.Add(opaciente);
-            await _context.SaveChangesAsync();
-            return opaciente;
+            try
+            {
+                Paciente opaciente = new Paciente();
+                opaciente.Dnip = request.Dnip;
+                opaciente.Idtip = "U003";
+                opaciente.Nomp = request.Nomp;
+                opaciente.Apellidos = request.Apellidos;
+                opaciente.Numero = request.Numero;
+                opaciente.Edad = request.edad;
+                opaciente.correoElectronico = request.correoElectronico;
+                _context.Paciente.Add(opaciente);
+                await _context.SaveChangesAsync();
+                return opaciente;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+           
         }
 
         public async Task<PacienteRequestDto> UpdatePaciente(PacienteRequestDto request)
@@ -85,6 +95,7 @@ namespace Consulta_medica.Repository
 
             foreach (var item in id)
             {
+                item.Dnip = request.Dnip;
                 item.Nomp = request.Nomp;
                 item.Numero = request.Numero;
                 item.Edad = request.edad;

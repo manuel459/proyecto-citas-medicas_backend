@@ -3,6 +3,7 @@ using System.Reflection;
 using Consulta_medica.Dto.Request;
 using Consulta_medica.Dto.Response;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
@@ -33,9 +34,13 @@ namespace Consulta_medica.Models
         public virtual DbSet<CitasMedicasReporteResponse> citasMedicasReporteResponse { get; set; }
         public virtual DbSet<Permisos> Permisos { get; set; }
         public virtual DbSet<Pagos> Pagos { get; set; }
+        public virtual DbSet<Recepcion> Recepcions { get; set; }
+        public virtual DbSet<Configs> configs { get; set; }
         //sp
         public virtual DbSet<ConfiguracionesResponse> ConfiguracionesResponses { get; set; }
         public virtual DbSet<CitasQueryDto> CitasQueryDtos { get; set; }
+        public virtual DbSet<GraficaCitasResponse> GraficaCitasResponses { get; set; }
+        public virtual DbSet<GraficasCitasDisponiblesResponse> GraficasCitasDisponiblesResponses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -52,11 +57,22 @@ namespace Consulta_medica.Models
 
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<GraficasCitasDisponiblesResponse>(e => { e.HasNoKey(); });
+
+            modelBuilder.Entity<GraficaCitasResponse>(e => { e.HasNoKey(); });
+
             modelBuilder.Entity<CitasQueryDto>(e => { e.HasNoKey(); });
 
             modelBuilder.Entity<ConfiguracionesResponse>(entity => 
             {
                 entity.HasNoKey();
+            });
+
+            modelBuilder.Entity<Configs>(entiry => { entiry.ToTable("configs"); });
+
+            modelBuilder.Entity<Recepcion>(entity =>
+            {
+                entity.ToTable("recepcion");
             });
 
             modelBuilder.Entity<Permisos>(entity =>
@@ -303,8 +319,8 @@ namespace Consulta_medica.Models
 
             modelBuilder.Entity<Paciente>(entity =>
             {
-                entity.HasKey(e => e.Dnip)
-                    .HasName("PK__paciente__2D55C7DFC84041A9");
+                //entity.HasKey(e => e.Dnip)
+                //    .HasName("PK__paciente__2D55C7DFC84041A9");
 
                 entity.ToTable("paciente");
 

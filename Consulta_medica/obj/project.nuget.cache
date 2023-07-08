@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "lJ+vhH4wY+vEZ5039lgSxbfgny0v4b2CxppMXTXCK3zwBiQKM7K6GpXyDE1N0Y/5nczpr74TCBjZ0xl97EfWDA==",
+  "dgSpecHash": "NIHddKTWQjqdnEWjjjfOyPcKNzLjUg+M8PkM4mRjD7bydBhjBi+QHKl0vCxtQaLdTlk9RPWLlpWWPRB/60QBpQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Toshiba\\Desktop\\Consulta_medica\\Consulta_medica\\Consulta_medica.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,9 @@
     "C:\\Users\\Toshiba\\.nuget\\packages\\fluentvalidation\\11.0.2\\fluentvalidation.11.0.2.nupkg.sha512",
     "C:\\Users\\Toshiba\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.0.2\\fluentvalidation.aspnetcore.11.0.2.nupkg.sha512",
     "C:\\Users\\Toshiba\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.0.2\\fluentvalidation.dependencyinjectionextensions.11.0.2.nupkg.sha512",
+    "C:\\Users\\Toshiba\\.nuget\\packages\\hangfire.aspnetcore\\1.7.36\\hangfire.aspnetcore.1.7.36.nupkg.sha512",
+    "C:\\Users\\Toshiba\\.nuget\\packages\\hangfire.core\\1.7.36\\hangfire.core.1.7.36.nupkg.sha512",
+    "C:\\Users\\Toshiba\\.nuget\\packages\\hangfire.sqlserver\\1.7.36\\hangfire.sqlserver.1.7.36.nupkg.sha512",
     "C:\\Users\\Toshiba\\.nuget\\packages\\itextsharp\\5.5.10\\itextsharp.5.5.10.nupkg.sha512",
     "C:\\Users\\Toshiba\\.nuget\\packages\\itextsharp.xmlworker\\5.4.2\\itextsharp.xmlworker.5.4.2.nupkg.sha512",
     "C:\\Users\\Toshiba\\.nuget\\packages\\messagepack\\1.9.11\\messagepack.1.9.11.nupkg.sha512",
@@ -97,6 +100,7 @@
     "C:\\Users\\Toshiba\\.nuget\\packages\\system.componentmodel.primitives\\4.3.0\\system.componentmodel.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\Toshiba\\.nuget\\packages\\system.componentmodel.typeconverter\\4.3.0\\system.componentmodel.typeconverter.4.3.0.nupkg.sha512",
     "C:\\Users\\Toshiba\\.nuget\\packages\\system.configuration.configurationmanager\\4.5.0\\system.configuration.configurationmanager.4.5.0.nupkg.sha512",
+    "C:\\Users\\Toshiba\\.nuget\\packages\\system.data.sqlclient\\4.4.0\\system.data.sqlclient.4.4.0.nupkg.sha512",
     "C:\\Users\\Toshiba\\.nuget\\packages\\system.diagnostics.debug\\4.3.0\\system.diagnostics.debug.4.3.0.nupkg.sha512",
     "C:\\Users\\Toshiba\\.nuget\\packages\\system.diagnostics.diagnosticsource\\4.7.1\\system.diagnostics.diagnosticsource.4.7.1.nupkg.sha512",
     "C:\\Users\\Toshiba\\.nuget\\packages\\system.diagnostics.tools\\4.3.0\\system.diagnostics.tools.4.3.0.nupkg.sha512",

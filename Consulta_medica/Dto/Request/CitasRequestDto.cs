@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Consulta_medica.Dto.Request
 {
@@ -13,7 +15,7 @@ namespace Consulta_medica.Dto.Request
         //End
         public string Codmed { get; set; }
         public DateTime Feccit { get; set; }
-        public int Estado { get; set; }
+        public int nEstado { get; set; }
         public string Codes { get; set; }
         public string NombreEspecialidad { get; set; }
         public string NombreMedico { get; set; }
@@ -49,6 +51,7 @@ namespace Consulta_medica.Dto.Request
         public int id { get; set; }
         public int dnip { get; set; }
         public string sNombre_Paciente { get; set; }
+        public int nNumero_Paciente { get; set; }
         public string codmed { get; set; }
         public string sNombre_Medico { get; set; }
         public DateTime feccit { get; set; }
@@ -60,6 +63,10 @@ namespace Consulta_medica.Dto.Request
         public int nEstado_Pago { get; set; }
         public string sEstado_Pago { get; set; }
         public decimal costo { get; set; }
+        public int? nId_Historico { get; set; }
+        public string Diagnostico { get; set; }
+        public string Receta { get; set; }
+        public int nTotal_Historicos { get; set; }
     }
 
     public class CitasQueryDtoReport

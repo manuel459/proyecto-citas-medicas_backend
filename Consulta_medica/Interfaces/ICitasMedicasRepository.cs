@@ -15,5 +15,6 @@ namespace Consulta_medica.Interfaces
         Task<Response> AddCitas(CitasRequestDto request);
         Task<CitasRequestDto> UpdateCitas(CitasRequestDto request);
         Task<Citas> DeleteCitas(int id);
+        Task<bool> RecordatorioNotification();
     }
 }

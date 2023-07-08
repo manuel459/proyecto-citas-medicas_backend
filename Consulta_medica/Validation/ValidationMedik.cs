@@ -1,5 +1,7 @@
 ﻿using Consulta_medica.Dto.Request;
+using Consulta_medica.Models;
 using FluentValidation;
+using System.Linq;
 
 namespace Consulta_medica.Validation
 {
@@ -18,7 +20,14 @@ namespace Consulta_medica.Validation
                 {
                     RuleFor(x => x.Dni)
                     .Must(x => x <= 99999999 && x >= 10000000).WithMessage("El campo Dni debe contener 8 caracteres");
-                });
+                }).Must((Medico,id) =>
+                {
+                    using (consulta_medicaContext db = new consulta_medicaContext())
+                    {
+                        var lista = db.Medico.Where(x => x.Dni == id && x.Codmed != Medico.Codmed).Select(x => x.Dni);
+                        return (!lista.Contains(id));
+                    }
+                }).WithMessage("Dni existente");
              
             RuleFor(x => x.Sexo)
                 .NotEmpty().WithMessage("Por favor indica tu sexo")

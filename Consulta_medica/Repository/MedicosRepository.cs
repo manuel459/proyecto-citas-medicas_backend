@@ -42,6 +42,7 @@ namespace Consulta_medica.Repository
             omedico.Codes = request.Codes;
             omedico.Idtip = "U002";
             omedico.Nombre = request.Nombre;
+            omedico.sApellidos = request.sApellidos;
             omedico.Sexo = request.Sexo;
             omedico.Nac = request.Nac;
             omedico.Correo = request.Correo;
@@ -62,6 +63,7 @@ namespace Consulta_medica.Repository
             {
                 item.Codes = request.Codes;
                 item.Nombre = request.Nombre;
+                item.sApellidos = request.sApellidos;
                 item.Sexo = request.Sexo;
                 item.Nac = request.Nac;
                 item.Correo = request.Correo;
@@ -142,11 +144,17 @@ namespace Consulta_medica.Repository
 
         public async Task<int> ValidatePermission(string correoElectronico)
         {
-            var permiso = await(from m in _context.Administrador
+            var permiso = await((from m in _context.Administrador
                                 join p in _context.Permisos
                                 on m.Iptip equals p.idtip
                                 where m.Correo == correoElectronico && p.sSlug == "LIST-MODULE-MEDICOS"
-                                select m).CountAsync();
+                                select p.sSlug).Union(
+                                from m in _context.Recepcions
+                                join p in _context.Permisos
+                                on m.Iptip equals p.idtip
+                                where m.Correo == correoElectronico && p.sSlug == "LIST-MODULE-MEDICOS"
+                                select p.sSlug
+                                )).CountAsync();
 
             return permiso;
         }

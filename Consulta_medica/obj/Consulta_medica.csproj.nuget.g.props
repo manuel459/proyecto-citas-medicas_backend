@@ -17,5 +17,6 @@
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgMicrosoft_EntityFrameworkCore_Tools Condition=" '$(PkgMicrosoft_EntityFrameworkCore_Tools)' == '' ">C:\Users\Toshiba\.nuget\packages\microsoft.entityframeworkcore.tools\3.1.12</PkgMicrosoft_EntityFrameworkCore_Tools>
+    <PkgHangfire_SqlServer Condition=" '$(PkgHangfire_SqlServer)' == '' ">C:\Users\Toshiba\.nuget\packages\hangfire.sqlserver\1.7.36</PkgHangfire_SqlServer>
   </PropertyGroup>
 </Project>

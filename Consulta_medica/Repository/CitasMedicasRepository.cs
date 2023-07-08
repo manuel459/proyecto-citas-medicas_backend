@@ -109,6 +109,7 @@ namespace Consulta_medica.Repository
                     ocitas.Hora = TimeSpan.Parse(FinalHora[0].ToString());
                     _context.Citas.Add(ocitas);
                     var insert = await _context.SaveChangesAsync();
+                    request.Id = ocitas.Id;
 
                     if (insert.Equals(1))
                     {
@@ -150,6 +151,7 @@ namespace Consulta_medica.Repository
         {
             //Extraction Nombre de la especialidad 
             request.NombreEspecialidad = _context.Especialidad.Where(x => x.Codes == request.Codes).Select(x => x.Nombre).FirstOrDefault();
+            request.NombreMedico = _context.Medico.Where(x => x.Codmed == request.Codmed).Select(x => x.Nombre).FirstOrDefault();
             request.Costo = _context.Especialidad.Where(x => x.Codes == request.Codes).Select(x => x.Costo).FirstOrDefault();
             //end
 
@@ -188,6 +190,64 @@ namespace Consulta_medica.Repository
             _context.Citas.Remove(lst);
             await _context.SaveChangesAsync();
             return lst;
+        }
+
+
+        //FLUJO DE RECORDATORIO DE NOTIFICACIÓN
+        public async Task<bool> RecordatorioNotification()
+        {
+            try
+            {
+                //Flag para envio de notificacion masiva
+                var nCodigo = (await _context.configs.FirstOrDefaultAsync(x => x.sTable == "Tb_Notification_Activa")).nCodigo;
+
+                if (nCodigo.Equals(1))
+                {
+                    DateTime FechaPrevia = DateTime.Now.AddDays(1).Date;
+
+                    var requestList = await (from c in _context.Citas
+                                             join p in _context.Paciente
+                                             on c.Dnip equals p.Dnip
+                                             join m in _context.Medico
+                                             on c.Codmed equals m.Codmed
+                                             join e in _context.Especialidad
+                                             on c.Codes equals e.Codes
+                                             where c.Feccit == FechaPrevia
+                                             && c.Estado == 1 // PENDIENTE 
+                                             select new CitasRequestDto
+                                             {
+                                                 Id = c.Id,
+                                                 Dnip = c.Dnip,
+                                                 NombrePaciente = p.Nomp,
+                                                 CorreoElectronico = p.correoElectronico,
+                                                 Codmed = c.Codmed,
+                                                 Feccit = (DateTime)c.Feccit,
+                                                 nEstado = c.Estado,
+                                                 Codes = c.Codes,
+                                                 NombreMedico = m.Nombre,
+                                                 NombreEspecialidad = e.Nombre,
+                                                 Hora = c.Hora.ToString("hh\\:mm"),
+                                                 Costo = e.Costo
+
+                                             }).ToListAsync();
+
+                    GenerarPDF generarPDF = new();
+
+                    foreach (var request in requestList)
+                    {
+                        string documento = generarPDF.GenerateInvestorDocument(request);
+
+                        generarPDF.EnvioNotificationRecordatorio(request, documento);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string messageError = ex.Message;
+                return false;
+            }    
+            
+            return true;
         }
 
     }
